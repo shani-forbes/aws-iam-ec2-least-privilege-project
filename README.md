@@ -56,3 +56,30 @@ My initial choice for the Finance group was AWS's `Billing` managed policy. The 
 The policy included write permissions across several billing-related services. Since Nia's requirement was to monitor costs rather than make billing changes, I decided this was broader access than necessary.
 
 I replaced it with `AWSBillingReadOnlyAccess`, which better matched the Finance role's requirements while reducing unnecessary permissions.
+
+## EC2 Workload Access to S3
+
+The next requirement was to allow an application running on EC2 to retrieve a specific file from an S3 bucket.
+
+Rather than creating an IAM user and storing long-term access keys on the instance, I used an IAM role for EC2. This allows the instance to receive temporary AWS credentials automatically and keeps the workload's permissions separate from the permissions assigned to human users.
+
+### Creating the S3 Access Policy
+
+I created a custom policy, `EC2-S3-TestFile-ReadOnly`, that allowed only the following action:
+
+- `s3:GetObject`
+
+The permission was scoped to a single object, `test-file.txt`, rather than granting access to the entire S3 bucket.
+
+This meant the EC2 workload could retrieve the file it needed without receiving broader read or write access to S3.
+
+### Creating the EC2 Role
+
+I created the `EC2-S3-TestFile-Role` and configured EC2 as its trusted service.
+
+The role combined two separate controls:
+
+- **Trust policy:** allowed the EC2 service to assume the role.
+- **Permissions policy:** defined what the instance could do after assuming it — in this case, retrieve the specified S3 object.
+
+I then attached the role to the EC2 instance.
