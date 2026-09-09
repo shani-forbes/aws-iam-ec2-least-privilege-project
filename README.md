@@ -171,3 +171,21 @@ aws s3api put-object \
 AWS returned `AccessDenied` for `s3:PutObject`.
 
 This was the expected result because the role's policy allowed `s3:GetObject` but did not grant `s3:PutObject`. Together, the successful read and denied write confirmed that the role was operating within the intended permissions.
+
+## Cost Management and Cleanup
+
+Because this project was built in a personal AWS environment, I set up AWS Budgets to monitor spending and selected free-tier eligible resources where possible.
+
+After completing the testing and validation, I terminated the EC2 instance and deleted the S3 bucket to avoid leaving unnecessary resources running.
+
+I also reviewed the environment after cleanup to confirm that the temporary project resources had been removed.
+
+## What I Learned
+
+This project helped me better understand the difference between permissions assigned to human IAM users and permissions assigned to AWS workloads.
+
+One of my biggest takeaways was understanding that giving a developer permission to manage an EC2 instance does not mean the application running on that instance automatically inherits the developer's permissions. The EC2 instance can have its own identity and permissions through an IAM role.
+
+I also saw how precise IAM policies need to be. A small error in the S3 resource ARN was enough to cause an authorization failure, and troubleshooting the `AccessDenied` response helped reinforce how AWS evaluates permissions against specific resources.
+
+Finally, testing both an allowed action and a denied action gave me a much clearer way to validate least-privilege access than simply assuming the policy was configured correctly.
