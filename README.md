@@ -36,3 +36,23 @@ For this project, I wanted to:
 - Apply least privilege when deciding what each user or workload actually needed.
 - Configure an EC2 instance to securely retrieve a specific file from S3 using an IAM role rather than stored access keys.
 - Test the configuration to confirm that intended actions were allowed and unintended actions were denied.
+
+## IAM User and Group Design
+
+Based on the scenario, I created three IAM groups to manage access according to each employee's responsibilities:
+
+| User | Role | IAM Group | AWS Managed Policy |
+|------|------|-----------|--------------------|
+| Maya | Cloud Administrator | Cloud_Admin | AdministratorAccess |
+| Andre | Developer | Developers | AmazonEC2FullAccess |
+| Nia | Finance | Finance | AWSBillingReadOnlyAccess |
+
+I managed permissions through IAM groups rather than attaching policies directly to individual users, making access easier to manage as users are added or responsibilities change.
+
+### Reviewing Finance Access
+
+My initial choice for the Finance group was AWS's `Billing` managed policy. The name appeared to match Nia's responsibilities, but after reviewing the permissions included in the policy, I noticed that it provided more than visibility into billing information.
+
+The policy included write permissions across several billing-related services. Since Nia's requirement was to monitor costs rather than make billing changes, I decided this was broader access than necessary.
+
+I replaced it with `AWSBillingReadOnlyAccess`, which better matched the Finance role's requirements while reducing unnecessary permissions.
