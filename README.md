@@ -83,3 +83,91 @@ The role combined two separate controls:
 - **Permissions policy:** defined what the instance could do after assuming it — in this case, retrieve the specified S3 object.
 
 I then attached the role to the EC2 instance.
+
+## Testing, Troubleshooting, and Validation
+
+With the EC2 instance running and the IAM role attached, I connected to the instance to test whether the access model worked as intended.
+
+> **Note:** AWS account-specific identifiers and infrastructure details have been redacted from this documentation.
+
+### Connecting to the EC2 Instance
+
+My initial attempt to connect using EC2 Instance Connect from the AWS console was unsuccessful. I switched to connecting from my local terminal using SSH and the key pair created when launching the instance.
+
+After restricting the private key's permissions, I connected successfully using the Amazon Linux `ec2-user`.
+
+```bash
+chmod 400 "EC2 for Iam.pem"
+
+ssh -i "EC2 for Iam.pem" ec2-user@<EC2-PUBLIC-DNS>
+```
+
+### Verifying the Instance Identity
+
+Before testing S3 access, I verified which AWS identity the EC2 instance was using:
+
+```bash
+aws sts get-caller-identity
+```
+
+The returned ARN showed that the instance was operating as an assumed role session for `EC2-S3-TestFile-Role`.
+
+This confirmed that the workload was using the EC2 IAM role rather than credentials belonging to one of the human IAM users.
+
+### Troubleshooting S3 Access
+
+My first attempt to retrieve `test-file.txt` resulted in an `AccessDenied` error.
+
+I reviewed the custom IAM policy and compared its resource ARN with the actual S3 bucket and object. I found that I had incorrectly specified the resource in the policy, so the permission did not apply to the object I was trying to retrieve.
+
+I corrected the policy to reference the exact object:
+
+```text
+arn:aws:s3:::iam-ec2-project-<ACCOUNT-ID>-us-east-1-an/test-file.txt
+```
+
+After correcting the resource ARN, I repeated the test.
+
+### Validating Read Access
+
+I used the S3 API to retrieve the object:
+
+```bash
+aws s3api get-object \
+  --bucket iam-ec2-project-<ACCOUNT-ID>-us-east-1-an \
+  --key test-file.txt \
+  downloaded-test-file.txt
+```
+
+The request succeeded. I then verified the downloaded file:
+
+```bash
+cat downloaded-test-file.txt
+```
+
+The expected contents were returned:
+
+```text
+Hello from my AWS IAM + EC2 project!
+```
+
+This confirmed that the EC2 role could retrieve the specific S3 object defined in the policy.
+
+### Validating That Write Access Was Denied
+
+A successful read confirmed what the role could do, but I also wanted to verify what it could not do.
+
+I created a local test file on the EC2 instance and attempted to upload it to the S3 bucket:
+
+```bash
+echo "EC2 should NOT be allowed to upload this" > unauthorized-upload.txt
+
+aws s3api put-object \
+  --bucket iam-ec2-project-<ACCOUNT-ID>-us-east-1-an \
+  --key unauthorized-upload.txt \
+  --body unauthorized-upload.txt
+```
+
+AWS returned `AccessDenied` for `s3:PutObject`.
+
+This was the expected result because the role's policy allowed `s3:GetObject` but did not grant `s3:PutObject`. Together, the successful read and denied write confirmed that the role was operating within the intended permissions.
