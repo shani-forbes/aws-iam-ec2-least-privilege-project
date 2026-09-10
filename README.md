@@ -200,11 +200,20 @@ aws s3api put-object \
 
 AWS returned `AccessDenied` for `s3:PutObject`.
 
+![S3 PutObject request denied by the EC2 IAM role](Screenshots/S3-putobject-denied.PNG)
+
+
 This was the expected result because the role's policy allowed `s3:GetObject` but did not grant `s3:PutObject`. Together, the successful read and denied write confirmed that the role was operating within the intended permissions.
 
 ## Cost Management and Cleanup
 
 Because this project was built in a personal AWS environment, I set up AWS Budgets to monitor spending and selected free-tier eligible resources where possible.
+
+Because this project was built in a personal AWS environment, I set up AWS Budgets to monitor spending and selected free-tier eligible resources where possible.
+
+![AWS Budgets configured for project cost monitoring](Screenshots/aws-cost-budgets.PNG)
+
+*AWS Budgets configured to monitor spending while working in my personal AWS environment.*
 
 After completing the testing and validation, I terminated the EC2 instance and deleted the S3 bucket to avoid leaving unnecessary resources running.
 
