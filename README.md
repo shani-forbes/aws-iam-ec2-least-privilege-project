@@ -128,7 +128,10 @@ aws sts get-caller-identity
 
 The returned ARN showed that the instance was operating as an assumed role session for `EC2-S3-TestFile-Role`.
 
-This confirmed that the workload was using the EC2 IAM role rather than credentials belonging to one of the human IAM users.
+![EC2 instance identity verified using AWS STS](Screenshots/ec2-assumed-role-validation.PNG)
+
+*AWS STS confirms that the EC2 instance is operating as an assumed session of EC2-S3-TestFile-Role.*
+
 
 ### Troubleshooting S3 Access
 
