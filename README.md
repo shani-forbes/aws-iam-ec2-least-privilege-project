@@ -59,11 +59,15 @@ My initial choice for the Finance group was AWS's `Billing` managed policy. The 
 
 The policy included write permissions across several billing-related services. Since Nia's requirement was to monitor costs rather than make billing changes, I decided this was broader access than necessary.
 
-I replaced it with `AWSBillingReadOnlyAccess`, which better matched the Finance role's requirements while reducing unnecessary permissions.
-
 ![Permissions included in the AWS Billing managed policy](Screenshots/finance-billing-policy-review.PNG)
 
 *Reviewing the Billing policy revealed write and full-access permissions that exceeded the Finance user's requirements.*
+
+I replaced it with `AWSBillingReadOnlyAccess`, which better matched the Finance role's requirements while reducing unnecessary permissions.
+
+![Finance IAM group with AWSBillingReadOnlyAccess](Screenshots/finance-readonly-permissions.PNG)
+
+*Finance group after replacing the broader Billing policy with AWSBillingReadOnlyAccess.*
 
 ## EC2 Workload Access to S3
 
