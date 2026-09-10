@@ -61,6 +61,10 @@ The policy included write permissions across several billing-related services. S
 
 I replaced it with `AWSBillingReadOnlyAccess`, which better matched the Finance role's requirements while reducing unnecessary permissions.
 
+![Permissions included in the AWS Billing managed policy](Screenshots/finance-billing-policy-review.PNG)
+
+*Reviewing the Billing policy revealed write and full-access permissions that exceeded the Finance user's requirements.*
+
 ## EC2 Workload Access to S3
 
 The next requirement was to allow an application running on EC2 to retrieve a specific file from an S3 bucket.
