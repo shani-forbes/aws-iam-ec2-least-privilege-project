@@ -61,13 +61,11 @@ The policy included write permissions across several billing-related services. S
 
 ![Permissions included in the AWS Billing managed policy](Screenshots/finance-billing-policy-review.PNG)
 
-*Reviewing the Billing policy revealed write and full-access permissions that exceeded the Finance user's requirements.*
 
 I replaced it with `AWSBillingReadOnlyAccess`, which better matched the Finance role's requirements while reducing unnecessary permissions.
 
 ![Finance IAM group with AWSBillingReadOnlyAccess](Screenshots/finance-readonly-permissions.PNG)
 
-*Finance group after replacing the broader Billing policy with AWSBillingReadOnlyAccess.*
 
 ## EC2 Workload Access to S3
 
@@ -130,7 +128,6 @@ The returned ARN showed that the instance was operating as an assumed role sessi
 
 ![EC2 instance identity verified using AWS STS](Screenshots/ec2-assumed-role-validation.PNG)
 
-*AWS STS confirms that the EC2 instance is operating as an assumed session of EC2-S3-TestFile-Role.*
 
 
 ### Troubleshooting S3 Access
@@ -209,11 +206,8 @@ This was the expected result because the role's policy allowed `s3:GetObject` bu
 
 Because this project was built in a personal AWS environment, I set up AWS Budgets to monitor spending and selected free-tier eligible resources where possible.
 
-Because this project was built in a personal AWS environment, I set up AWS Budgets to monitor spending and selected free-tier eligible resources where possible.
-
 ![AWS Budgets configured for project cost monitoring](Screenshots/aws-cost-budgets.PNG)
 
-*AWS Budgets configured to monitor spending while working in my personal AWS environment.*
 
 After completing the testing and validation, I terminated the EC2 instance and deleted the S3 bucket to avoid leaving unnecessary resources running.
 
