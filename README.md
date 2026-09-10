@@ -137,6 +137,9 @@ The returned ARN showed that the instance was operating as an assumed role sessi
 
 My first attempt to retrieve `test-file.txt` resulted in an `AccessDenied` error.
 
+![Initial S3 GetObject AccessDenied error](Screenshots/s3-getobject-access-denied.PNG)
+
+
 I reviewed the custom IAM policy and compared its resource ARN with the actual S3 bucket and object. I found that I had incorrectly specified the resource in the policy, so the permission did not apply to the object I was trying to retrieve.
 
 I corrected the policy to reference the exact object:
