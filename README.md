@@ -49,6 +49,10 @@ Based on the scenario, I created three IAM groups to manage access according to 
 
 I managed permissions through IAM groups rather than attaching policies directly to individual users, making access easier to manage as users are added or responsibilities change.
 
+![Cloud_Admin IAM group with AdministratorAccess policy](Screenshots/cloud-admin-permissions.PNG)
+
+*Cloud_Admin group configured with the AWS-managed AdministratorAccess policy.*
+
 ### Reviewing Finance Access
 
 My initial choice for the Finance group was AWS's `Billing` managed policy. The name appeared to match Nia's responsibilities, but after reviewing the permissions included in the policy, I noticed that it provided more than visibility into billing information.
