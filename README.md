@@ -96,6 +96,10 @@ The role combined two separate controls:
 
 I then attached the role to the EC2 instance.
 
+![EC2 IAM role with custom S3 read-only policy](Screenshots/ec2-s3-role-permissions.PNG)
+
+*EC2-S3-TestFile-Role with the custom EC2-S3-TestFile-ReadOnly policy attached.*
+
 ## Testing, Troubleshooting, and Validation
 
 With the EC2 instance running and the IAM role attached, I connected to the instance to test whether the access model worked as intended.
