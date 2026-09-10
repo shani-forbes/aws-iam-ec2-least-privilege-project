@@ -161,7 +161,12 @@ aws s3api get-object \
   downloaded-test-file.txt
 ```
 
-The request succeeded. I then verified the downloaded file:
+The request succeeded.
+
+![Successful S3 GetObject request](Screenshots/S3-getobject-success.PNG)
+
+
+I then verified the downloaded file:
 
 ```bash
 cat downloaded-test-file.txt
@@ -172,6 +177,9 @@ The expected contents were returned:
 ```text
 Hello from my AWS IAM + EC2 project!
 ```
+
+![Contents of the downloaded S3 object](Screenshots/S3-file-content-validation.PNG)
+
 
 This confirmed that the EC2 role could retrieve the specific S3 object defined in the policy.
 
